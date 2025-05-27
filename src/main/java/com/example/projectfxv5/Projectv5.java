@@ -1,5 +1,11 @@
 package com.example.projectfxv5;
 
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import com.example.projectfxv5.dao.CarDAO;
 import com.example.projectfxv5.dao.CustomerDAO;
 import com.example.projectfxv5.dao.EmployeeDAO;
@@ -10,31 +16,40 @@ import com.example.projectfxv5.model.Employee;
 import com.example.projectfxv5.model.Sale;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
-import java.io.InputStream;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
- * Main application class for the Automotive Inventory System.
- * This JavaFX application provides a user interface for managing:
- * - Car inventory
- * - Employee data
- * - Customer information
- * - Sales records
- * - Reports and commission calculations
+ * Main application class for the Automotive Inventory System. This JavaFX
+ * application provides a user interface for managing: - Car inventory -
+ * Employee data - Customer information - Sales records - Reports and commission
+ * calculations
  */
-
 public class Projectv5 extends Application {
 
     // DAO instances
@@ -43,11 +58,10 @@ public class Projectv5 extends Application {
     private final CustomerDAO customerDAO = new CustomerDAO();
     private final SaleDAO saleDAO = new SaleDAO();
 
-
     /**
-     * Helper method to load images from resources.
-     * Handles resource loading and error reporting.
-     * 
+     * Helper method to load images from resources. Handles resource loading and
+     * error reporting.
+     *
      * @param path The path to the image resource
      * @return The loaded Image object or null if loading fails
      */
@@ -67,21 +81,20 @@ public class Projectv5 extends Application {
     }
 
     /**
-     * JavaFX application entry point.
-     * Initializes and displays the login window.
-     * 
+     * JavaFX application entry point. Initializes and displays the login
+     * window.
+     *
      * @param primaryStage The primary stage for this application
      */
     @Override
     public void start(Stage primaryStage) {
-        //showLoginWindow(primaryStage);
-        showMainDashboard(primaryStage);
+        showLoginWindow(primaryStage);
     }
 
     /**
-     * Displays the login window.
-     * This is the first screen users see before accessing the main dashboard.
-     * 
+     * Displays the login window. This is the first screen users see before
+     * accessing the main dashboard.
+     *
      * @param primaryStage The primary stage for this application
      */
     private void showLoginWindow(Stage primaryStage) {
@@ -194,11 +207,11 @@ public class Projectv5 extends Application {
 
         // Add login form elements
         loginForm.getChildren().addAll(
-            usernameLabel, usernameField,
-            passwordLabel, passwordField,
-            separator,
-            errorLabel,
-            loginButton
+                usernameLabel, usernameField,
+                passwordLabel, passwordField,
+                separator,
+                errorLabel,
+                loginButton
         );
 
         // Set login button action with animation
@@ -273,9 +286,9 @@ public class Projectv5 extends Application {
     }
 
     /**
-     * Displays the main dashboard with menu options.
-     * This is the primary navigation screen of the application.
-     * 
+     * Displays the main dashboard with menu options. This is the primary
+     * navigation screen of the application.
+     *
      * @param primaryStage The primary stage for this application
      */
     private void showMainDashboard(Stage primaryStage) {
@@ -363,7 +376,7 @@ public class Projectv5 extends Application {
 
     /**
      * Creates a styled dashboard button with an icon and text.
-     * 
+     *
      * @param text The text to display on the button
      * @param iconPath The path to the icon image resource
      * @return A styled Button with icon and text
@@ -407,9 +420,9 @@ public class Projectv5 extends Application {
     }
 
     /**
-     * Displays the car stock management window.
-     * Allows adding, deleting, and viewing all cars in inventory.
-     * 
+     * Displays the car stock management window. Allows adding, deleting, and
+     * viewing all cars in inventory.
+     *
      * @param primaryStage The primary stage for this application
      */
     private void showStockWindow(Stage primaryStage) {
@@ -547,10 +560,10 @@ public class Projectv5 extends Application {
             saveBtn.setOnAction(ev -> {
                 try {
                     // Validate form fields
-                    if (carComboBox.getValue() == null || 
-                        customerComboBox.getValue() == null || 
-                        employeeComboBox.getValue() == null || 
-                        amountField.getText().isEmpty()) {
+                    if (carComboBox.getValue() == null
+                            || customerComboBox.getValue() == null
+                            || employeeComboBox.getValue() == null
+                            || amountField.getText().isEmpty()) {
 
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Validation Error");
@@ -571,12 +584,12 @@ public class Projectv5 extends Application {
 
                     // Create a new Sale object from form data
                     Sale sale = new Sale(
-                        saleIdField.getText(),
-                        carId,
-                        customerId,
-                        employeeId,
-                        Double.parseDouble(amountField.getText()),
-                        formattedDate
+                            saleIdField.getText(),
+                            carId,
+                            customerId,
+                            employeeId,
+                            Double.parseDouble(amountField.getText()),
+                            formattedDate
                     );
 
                     // Save the sale to the database
@@ -590,9 +603,9 @@ public class Projectv5 extends Application {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Success");
                     alert.setHeaderText("Sale Completed");
-                    alert.setContentText("Vehicle " + carComboBox.getValue() + 
-                                         " has been sold to " + customerComboBox.getValue() + 
-                                         " by " + employeeComboBox.getValue());
+                    alert.setContentText("Vehicle " + carComboBox.getValue()
+                            + " has been sold to " + customerComboBox.getValue()
+                            + " by " + employeeComboBox.getValue());
                     alert.showAndWait();
 
                     sellStage.close();
@@ -616,9 +629,9 @@ public class Projectv5 extends Application {
             VBox vbox = new VBox(15);
             vbox.setPadding(new Insets(10));
             vbox.getChildren().addAll(
-                new Label("Enter Sale Details"), 
-                form, 
-                buttonBox
+                    new Label("Enter Sale Details"),
+                    form,
+                    buttonBox
             );
 
             Scene formScene = new Scene(vbox);
@@ -664,24 +677,24 @@ public class Projectv5 extends Application {
                 try {
                     // Create a new Car object from form data
                     Car car = new Car(
-                        idField.getText(),
-                        modelField.getText(),
-                        variantField.getText(),
-                        Double.parseDouble(priceField.getText()),
-                        Double.parseDouble(mileageField.getText()),
-                        colorField.getText(),
-                        typeField.getText(),
-                        Double.parseDouble(weightField.getText()),
-                        numberPlateField.getText(),
-                        chassisField.getText()
+                            idField.getText(),
+                            modelField.getText(),
+                            variantField.getText(),
+                            Double.parseDouble(priceField.getText()),
+                            Double.parseDouble(mileageField.getText()),
+                            colorField.getText(),
+                            typeField.getText(),
+                            Double.parseDouble(weightField.getText()),
+                            numberPlateField.getText(),
+                            chassisField.getText()
                     );
 
                     // Use the DAO to add the car to the database
                     carDAO.add(car);
                     addStage.close();
                 } catch (NumberFormatException ex) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, 
-                        "Please enter valid numeric values for Price, Mileage, and Weight.");
+                    Alert alert = new Alert(Alert.AlertType.ERROR,
+                            "Please enter valid numeric values for Price, Mileage, and Weight.");
                     alert.showAndWait();
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -768,9 +781,9 @@ public class Projectv5 extends Application {
     }
 
     /**
-     * Displays the employee data window.
-     * Shows a list of all employees with their details and provides a form to add new employees.
-     * 
+     * Displays the employee data window. Shows a list of all employees with
+     * their details and provides a form to add new employees.
+     *
      * @param primaryStage The primary stage for this application
      */
     private void showEmployeeDataWindow(Stage primaryStage) {
@@ -902,8 +915,8 @@ public class Projectv5 extends Application {
 
         // Add all components to content
         content.getChildren().addAll(
-            addEmployeeLabel, formGrid, statusLabel, 
-            new Separator(), employeeListLabel, area
+                addEmployeeLabel, formGrid, statusLabel,
+                new Separator(), employeeListLabel, area
         );
 
         mainLayout.setCenter(content);
@@ -919,7 +932,7 @@ public class Projectv5 extends Application {
 
     /**
      * Helper method to refresh the employee list in the text area.
-     * 
+     *
      * @param area The TextArea to update with employee data
      */
     private void refreshEmployeeList(TextArea area) {
@@ -935,11 +948,11 @@ public class Projectv5 extends Application {
             } else {
                 // Display each employee in the text area
                 for (Employee employee : employees) {
-                    area.appendText("- Employee:\n" + 
-                        "ID: " + employee.getId() + "\n" +
-                        "Name: " + employee.getName() + "\n" +
-                        "Salary: " + employee.getSalary() + "\n\n" +
-                        "----------------------------------------\n\n");
+                    area.appendText("- Employee:\n"
+                            + "ID: " + employee.getId() + "\n"
+                            + "Name: " + employee.getName() + "\n"
+                            + "Salary: " + employee.getSalary() + "\n\n"
+                            + "----------------------------------------\n\n");
                 }
             }
         } catch (Exception e) {
@@ -949,9 +962,9 @@ public class Projectv5 extends Application {
     }
 
     /**
-     * Displays the customer data window.
-     * Shows a list of all customers with their details and provides a form to add new customers.
-     * 
+     * Displays the customer data window. Shows a list of all customers with
+     * their details and provides a form to add new customers.
+     *
      * @param primaryStage The primary stage for this application
      */
     private void showCustomerDataWindow(Stage primaryStage) {
@@ -1080,8 +1093,8 @@ public class Projectv5 extends Application {
 
         // Add all components to content
         content.getChildren().addAll(
-            addCustomerLabel, formGrid, statusLabel, 
-            new Separator(), customerListLabel, area
+                addCustomerLabel, formGrid, statusLabel,
+                new Separator(), customerListLabel, area
         );
 
         mainLayout.setCenter(content);
@@ -1097,7 +1110,7 @@ public class Projectv5 extends Application {
 
     /**
      * Helper method to refresh the customer list in the text area.
-     * 
+     *
      * @param area The TextArea to update with customer data
      */
     private void refreshCustomerList(TextArea area) {
@@ -1113,12 +1126,12 @@ public class Projectv5 extends Application {
             } else {
                 // Display each customer in the text area
                 for (Customer customer : customers) {
-                    area.appendText("- Customer:\n" + 
-                        "ID: " + customer.getId() + "\n" +
-                        "Name: " + customer.getName() + "\n" +
-                        "Phone: " + customer.getPhone() + "\n" +
-                        "Email: " + customer.getEmail() + "\n\n" +
-                        "----------------------------------------\n\n");
+                    area.appendText("- Customer:\n"
+                            + "ID: " + customer.getId() + "\n"
+                            + "Name: " + customer.getName() + "\n"
+                            + "Phone: " + customer.getPhone() + "\n"
+                            + "Email: " + customer.getEmail() + "\n\n"
+                            + "----------------------------------------\n\n");
                 }
             }
         } catch (Exception e) {
@@ -1128,9 +1141,9 @@ public class Projectv5 extends Application {
     }
 
     /**
-     * Displays the sales management window.
-     * Allows creating new sales and managing existing ones.
-     * 
+     * Displays the sales management window. Allows creating new sales and
+     * managing existing ones.
+     *
      * @param primaryStage The primary stage for this application
      */
     private void showSalesWindow(Stage primaryStage) {
@@ -1259,7 +1272,7 @@ public class Projectv5 extends Application {
             try {
                 Car car = carDAO.getById(data.getValue().getCarId());
                 return new javafx.beans.property.SimpleStringProperty(
-                    car != null ? car.getModel() + " " + car.getVariant() : data.getValue().getCarId());
+                        car != null ? car.getModel() + " " + car.getVariant() : data.getValue().getCarId());
             } catch (Exception e) {
                 return new javafx.beans.property.SimpleStringProperty(data.getValue().getCarId());
             }
@@ -1270,19 +1283,19 @@ public class Projectv5 extends Application {
             try {
                 Customer customer = customerDAO.getById(data.getValue().getCustomerId());
                 return new javafx.beans.property.SimpleStringProperty(
-                    customer != null ? customer.getName() : data.getValue().getCustomerId());
+                        customer != null ? customer.getName() : data.getValue().getCustomerId());
             } catch (Exception e) {
                 return new javafx.beans.property.SimpleStringProperty(data.getValue().getCustomerId());
             }
         });
 
         TableColumn<Sale, Double> amountColumn = new TableColumn<>("Amount");
-        amountColumn.setCellValueFactory(data -> 
-            new javafx.beans.property.SimpleDoubleProperty(data.getValue().getAmount()).asObject());
+        amountColumn.setCellValueFactory(data
+                -> new javafx.beans.property.SimpleDoubleProperty(data.getValue().getAmount()).asObject());
 
         TableColumn<Sale, String> dateColumn = new TableColumn<>("Date");
-        dateColumn.setCellValueFactory(data -> 
-            new javafx.beans.property.SimpleStringProperty(data.getValue().getDate()));
+        dateColumn.setCellValueFactory(data
+                -> new javafx.beans.property.SimpleStringProperty(data.getValue().getDate()));
 
         // Add columns to table
         salesTable.getColumns().addAll(idColumn, carColumn, customerColumn, amountColumn, dateColumn);
@@ -1341,9 +1354,9 @@ public class Projectv5 extends Application {
             createSaleBtn.setOnAction(e -> {
                 try {
                     // Validate inputs
-                    if (carComboBox.getValue() == null || customerComboBox.getValue() == null || 
-                        employeeComboBox.getValue() == null || amountField.getText().isEmpty() || 
-                        datePicker.getValue() == null) {
+                    if (carComboBox.getValue() == null || customerComboBox.getValue() == null
+                            || employeeComboBox.getValue() == null || amountField.getText().isEmpty()
+                            || datePicker.getValue() == null) {
 
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Input Error");
@@ -1428,7 +1441,7 @@ public class Projectv5 extends Application {
 
     /**
      * Saves the sales report as a text file.
-     * 
+     *
      * @param content The content to save
      */
     private void saveSalesReportAsTxt(String content) {
@@ -1436,7 +1449,7 @@ public class Projectv5 extends Application {
             javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
             fileChooser.setTitle("Save Sales Report");
             fileChooser.getExtensionFilters().add(
-                new javafx.stage.FileChooser.ExtensionFilter("Text Files", "*.txt"));
+                    new javafx.stage.FileChooser.ExtensionFilter("Text Files", "*.txt"));
             fileChooser.setInitialFileName("sales_report.txt");
 
             java.io.File file = fileChooser.showSaveDialog(null);
@@ -1448,7 +1461,7 @@ public class Projectv5 extends Application {
 
                 // Show success message
                 javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                    javafx.scene.control.Alert.AlertType.INFORMATION);
+                        javafx.scene.control.Alert.AlertType.INFORMATION);
                 alert.setTitle("Success");
                 alert.setHeaderText(null);
                 alert.setContentText("Sales report saved successfully as TXT file!");
@@ -1459,7 +1472,7 @@ public class Projectv5 extends Application {
 
             // Show error message
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                javafx.scene.control.Alert.AlertType.ERROR);
+                    javafx.scene.control.Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
             alert.setContentText("Failed to save sales report: " + e.getMessage());
@@ -1469,7 +1482,7 @@ public class Projectv5 extends Application {
 
     /**
      * Saves the sales report as a PDF file.
-     * 
+     *
      * @param content The content to save
      */
     private void saveSalesReportAsPdf(String content) {
@@ -1477,7 +1490,7 @@ public class Projectv5 extends Application {
             javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
             fileChooser.setTitle("Save Sales Report");
             fileChooser.getExtensionFilters().add(
-                new javafx.stage.FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+                    new javafx.stage.FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
             fileChooser.setInitialFileName("sales_report.pdf");
 
             java.io.File file = fileChooser.showSaveDialog(null);
@@ -1489,8 +1502,8 @@ public class Projectv5 extends Application {
                 document.addPage(page);
 
                 // Create a content stream for adding content to the page
-                org.apache.pdfbox.pdmodel.PDPageContentStream contentStream = 
-                    new org.apache.pdfbox.pdmodel.PDPageContentStream(document, page);
+                org.apache.pdfbox.pdmodel.PDPageContentStream contentStream
+                        = new org.apache.pdfbox.pdmodel.PDPageContentStream(document, page);
 
                 // Set font and font size
                 contentStream.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.COURIER, 12);
@@ -1524,7 +1537,7 @@ public class Projectv5 extends Application {
 
                 // Show success message
                 javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                    javafx.scene.control.Alert.AlertType.INFORMATION);
+                        javafx.scene.control.Alert.AlertType.INFORMATION);
                 alert.setTitle("Success");
                 alert.setHeaderText(null);
                 alert.setContentText("Sales report saved successfully as PDF file!");
@@ -1535,7 +1548,7 @@ public class Projectv5 extends Application {
 
             // Show error message
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                javafx.scene.control.Alert.AlertType.ERROR);
+                    javafx.scene.control.Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
             alert.setContentText("Failed to save sales report: " + e.getMessage());
@@ -1544,9 +1557,9 @@ public class Projectv5 extends Application {
     }
 
     /**
-     * Displays the sales report window.
-     * Shows a summary of all sales with vehicle, customer, employee, and price information.
-     * 
+     * Displays the sales report window. Shows a summary of all sales with
+     * vehicle, customer, employee, and price information.
+     *
      * @param primaryStage The primary stage for this application
      */
     private void showReportWindow(Stage primaryStage) {
@@ -1625,12 +1638,12 @@ public class Projectv5 extends Application {
         });
 
         TableColumn<Sale, Double> amountColumn = new TableColumn<>("Amount");
-        amountColumn.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleDoubleProperty(data.getValue().getAmount()).asObject());
+        amountColumn.setCellValueFactory(data
+                -> new javafx.beans.property.SimpleDoubleProperty(data.getValue().getAmount()).asObject());
 
         TableColumn<Sale, String> dateColumn = new TableColumn<>("Date");
-        dateColumn.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(data.getValue().getDate()));
+        dateColumn.setCellValueFactory(data
+                -> new javafx.beans.property.SimpleStringProperty(data.getValue().getDate()));
 
         salesTable.getColumns().addAll(idColumn, carColumn, customerColumn, employeeColumn, amountColumn, dateColumn);
 
@@ -1666,16 +1679,25 @@ public class Projectv5 extends Application {
                 String employeeName = sale.getEmployeeId();
                 try {
                     Car car = carDAO.getById(sale.getCarId());
-                    if (car != null) carName = car.getModel() + " " + car.getVariant();
-                } catch (Exception ignored) {}
+                    if (car != null) {
+                        carName = car.getModel() + " " + car.getVariant();
+                    }
+                } catch (Exception ignored) {
+                }
                 try {
                     Customer customer = customerDAO.getById(sale.getCustomerId());
-                    if (customer != null) customerName = customer.getName();
-                } catch (Exception ignored) {}
+                    if (customer != null) {
+                        customerName = customer.getName();
+                    }
+                } catch (Exception ignored) {
+                }
                 try {
                     Employee employee = employeeDAO.getById(sale.getEmployeeId());
-                    if (employee != null) employeeName = employee.getName();
-                } catch (Exception ignored) {}
+                    if (employee != null) {
+                        employeeName = employee.getName();
+                    }
+                } catch (Exception ignored) {
+                }
                 report.append(String.format("%-8s %-25s %-20s %-20s %-10.2f %-12s\n",
                         sale.getId(), carName, customerName, employeeName, sale.getAmount(), sale.getDate()));
             }
@@ -1694,20 +1716,35 @@ public class Projectv5 extends Application {
                 String employeeName = sale.getEmployeeId();
                 try {
                     Car car = carDAO.getById(sale.getCarId());
-                    if (car != null) carName = (car.getModel() + " " + car.getVariant());
-                } catch (Exception ignored) {}
+                    if (car != null) {
+                        carName = (car.getModel() + " " + car.getVariant());
+                    }
+                } catch (Exception ignored) {
+                }
                 try {
                     Customer customer = customerDAO.getById(sale.getCustomerId());
-                    if (customer != null) customerName = customer.getName();
-                } catch (Exception ignored) {}
+                    if (customer != null) {
+                        customerName = customer.getName();
+                    }
+                } catch (Exception ignored) {
+                }
                 try {
                     Employee employee = employeeDAO.getById(sale.getEmployeeId());
-                    if (employee != null) employeeName = employee.getName();
-                } catch (Exception ignored) {}
+                    if (employee != null) {
+                        employeeName = employee.getName();
+                    }
+                } catch (Exception ignored) {
+                }
                 // Truncate values if too long
-                if (carName.length() > 14) carName = carName.substring(0, 14);
-                if (customerName.length() > 11) customerName = customerName.substring(0, 11);
-                if (employeeName.length() > 11) employeeName = employeeName.substring(0, 11);
+                if (carName.length() > 14) {
+                    carName = carName.substring(0, 14);
+                }
+                if (customerName.length() > 11) {
+                    customerName = customerName.substring(0, 11);
+                }
+                if (employeeName.length() > 11) {
+                    employeeName = employeeName.substring(0, 11);
+                }
                 report.append(String.format("%-8s %-15s %-12s %-12s %-10.2f %-12s\n",
                         sale.getId(), carName, customerName, employeeName, sale.getAmount(), sale.getDate()));
             }
@@ -1728,9 +1765,9 @@ public class Projectv5 extends Application {
     }
 
     /**
-     * Displays the commission viewer window.
-     * Shows a list of employees that can be selected to view their commission details.
-     * 
+     * Displays the commission viewer window. Shows a list of employees that can
+     * be selected to view their commission details.
+     *
      * @param primaryStage The primary stage for this application
      */
     private void showCommissionWindow(Stage primaryStage) {
@@ -1855,9 +1892,9 @@ public class Projectv5 extends Application {
     }
 
     /**
-     * Displays detailed commission information for a specific employee.
-     * Shows a breakdown of sales and calculated commissions.
-     * 
+     * Displays detailed commission information for a specific employee. Shows a
+     * breakdown of sales and calculated commissions.
+     *
      * @param primaryStage The primary stage for this application
      * @param empId The ID of the employee
      * @param empName The name of the employee
@@ -1982,7 +2019,7 @@ public class Projectv5 extends Application {
 
     /**
      * Main entry point for the application.
-     * 
+     *
      * @param args Command line arguments (not used)
      */
     public static void main(String[] args) {
