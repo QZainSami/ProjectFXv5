@@ -10,10 +10,12 @@ import com.example.projectfxv5.dao.CarDAO;
 import com.example.projectfxv5.dao.CustomerDAO;
 import com.example.projectfxv5.dao.EmployeeDAO;
 import com.example.projectfxv5.dao.SaleDAO;
+import com.example.projectfxv5.dao.UserDAO;
 import com.example.projectfxv5.model.Car;
 import com.example.projectfxv5.model.Customer;
 import com.example.projectfxv5.model.Employee;
 import com.example.projectfxv5.model.Sale;
+import com.example.projectfxv5.model.User;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -57,6 +59,7 @@ public class Projectv5 extends Application {
     private final EmployeeDAO employeeDAO = new EmployeeDAO();
     private final CustomerDAO customerDAO = new CustomerDAO();
     private final SaleDAO saleDAO = new SaleDAO();
+    private final UserDAO userDAO = new UserDAO();
 
     /**
      * Helper method to load images from resources. Handles resource loading and
@@ -219,36 +222,30 @@ public class Projectv5 extends Application {
             String username = usernameField.getText().trim();
             String password = passwordField.getText().trim();
 
-            // Simple validation - in a real app, you would check against a database
             if (username.isEmpty() || password.isEmpty()) {
                 errorLabel.setText("Username and password are required");
                 errorLabel.setVisible(true);
+                // ...shake animation...
+                return;
+            }
 
-                // Shake animation for error
-                javafx.animation.TranslateTransition shake = new javafx.animation.TranslateTransition(javafx.util.Duration.millis(50), errorLabel);
-                shake.setFromX(0);
-                shake.setByX(10);
-                shake.setCycleCount(6);
-                shake.setAutoReverse(true);
-                shake.play();
-
-            } else if (!username.equals("admin") || !password.equals("admin")) {
-                errorLabel.setText("Invalid username or password");
+            try {
+                User user = userDAO.getUserByUsername(username);
+                if (user == null || !user.getPassword().equals(password)) {
+                    errorLabel.setText("Invalid username or password");
+                    errorLabel.setVisible(true);
+                    // ...shake animation...
+                } else {
+                    // Success animation - fade out login form and show dashboard
+                    javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(javafx.util.Duration.millis(600), mainLayout);
+                    fadeOut.setFromValue(1.0);
+                    fadeOut.setToValue(0.0);
+                    fadeOut.setOnFinished(event -> showMainDashboard(primaryStage));
+                    fadeOut.play();
+                }
+            } catch (Exception ex) {
+                errorLabel.setText("Database error: " + ex.getMessage());
                 errorLabel.setVisible(true);
-                // Shake animation for error
-                javafx.animation.TranslateTransition shake = new javafx.animation.TranslateTransition(javafx.util.Duration.millis(50), errorLabel);
-                shake.setFromX(0);
-                shake.setByX(10);
-                shake.setCycleCount(6);
-                shake.setAutoReverse(true);
-                shake.play();
-            } else {
-                // Success animation - fade out login form and show dashboard
-                javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(javafx.util.Duration.millis(600), mainLayout);
-                fadeOut.setFromValue(1.0);
-                fadeOut.setToValue(0.0);
-                fadeOut.setOnFinished(event -> showMainDashboard(primaryStage));
-                fadeOut.play();
             }
         });
 
