@@ -86,7 +86,7 @@ The **Automotive Inventory System** is designed to streamline and digitize the d
 ### Steps
 
 1. **Clone the repository:**
-   ```sh
+   ```
    git clone https://github.com/yourusername/automotive-inventory-system.git
    cd automotive-inventory-system
    ```
