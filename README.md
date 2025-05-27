@@ -1,72 +1,150 @@
-# Automotive Inventory System
+# Automotive Inventory and Sales System
 
-This project is a JavaFX application for managing an automotive inventory system. It includes functionality for managing cars, employees, customers, and sales.
+A modern JavaFX desktop application for managing car dealership operations, including inventory, employees, customers, sales, and reporting.
+
+---
+
+## About This Project
+
+The **Automotive Inventory System** is designed to streamline and digitize the daily operations of a car dealership. Traditionally, managing car stock, employee records, customer information, and sales data involves a lot of paperwork and manual tracking, which can lead to errors and inefficiencies. This project provides a unified, user-friendly platform to handle all these tasks efficiently.
+
+### Why This Project?
+
+- **Centralized Management:** All dealership data—cars, employees, customers, and sales—are managed in one place.
+- **Error Reduction:** Automated record-keeping reduces manual errors and data loss.
+- **Productivity:** Employees spend less time on paperwork and more on sales and customer service.
+- **Reporting:** Instant access to sales and commission reports helps management make informed decisions.
+- **Modernization:** Brings a modern, digital workflow to traditional automotive businesses.
+
+### What Can You Do With It?
+
+- **Manage Car Inventory:** Add new cars, update existing listings, or remove sold/outdated vehicles.
+- **Employee Management:** Keep track of employee details, update records, and calculate commissions.
+- **Customer Management:** Store and retrieve customer information for better service and follow-up.
+- **Sales Tracking:** Record new sales, view sales history, and associate sales with employees and customers.
+- **Generate Reports:** Create and export sales and commission reports in TXT or PDF format for analysis or record-keeping.
+- **User-Friendly Interface:** Navigate easily with a modern, dark-themed UI designed for efficiency.
+
+---
 
 ## Features
 
-The application provides the following features:
-- Car inventory management
-- Employee data management
-- Customer information tracking
-- Sales record keeping
-- Sales reports and commission calculations
+- **Car Inventory Management**: Add, update, delete, and view cars in stock.
+- **Employee Management**: Manage employee records, salaries, and commissions.
+- **Customer Management**: Store and access customer information.
+- **Sales Tracking**: Record new sales and view sales history.
+- **Reporting**: Generate sales and commission reports, exportable as TXT or PDF.
+- **Modern UI**: Dark theme, responsive layout, and intuitive navigation.
 
-## Database Setup
+---
 
-The application uses an Access database to store data. The database includes:
-- 30 employees
-- 40 cars (20 sold, 20 in stock)
-- 20 customers
-- 20 sales records
+## Technology Stack
 
-### Populating the Database
+- **Frontend**: JavaFX
+- **Backend**: Java
+- **Database**: Microsoft Access (`.accdb`) via UCanAccess JDBC driver
+- **Build Tool**: Maven (Maven Wrapper included)
 
-To populate the database with sample data:
+---
 
-1. Ensure you have Java installed on your system
-2. Run the application and the database will be automatically created if it doesn't exist
-3. To manually populate the database with sample data, you can run the `DatabasePopulator` class:
-   ```
-   mvn exec:java -Dexec.mainClass="com.example.projectfxv5.DatabasePopulator"
-   ```
+## Project Structure
 
-### Required Dependencies
-
-The application requires the following dependencies:
-- UCanAccess JDBC driver and its dependencies (included in the Maven configuration)
-- JavaFX (included in the Maven configuration)
-
-## Database Location
-
-The database will be created in the project directory at:
 ```
-database\AutomotiveInventory.accdb
+├── database/
+│   └── AutomotiveInventory.accdb
+├── lib/
+│   └── [UCanAccess and dependencies]
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/example/projectfxv5/
+│   │   │       ├── Projectv5.java
+│   │   │       ├── dao/
+│   │   │       ├── model/
+│   │   │       └── ...
+│   │   └── resources/
+│   │       ├── com/example/projectfxv5/css/styles.css
+│   │       └── com/example/projectfxv5/images/
+│   └── test/
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+└── README.md
 ```
 
-The application will automatically create the `database` directory if it doesn't exist.
+---
 
-If you need to change the database location:
-1. Update the `db.path` property in `src/main/resources/config.properties`
+## Setup & Installation
 
-## Running the Application
+### Prerequisites
 
-To run the application:
+- Java 11 or higher
+- Microsoft Access or Access Database Engine (for `.accdb` support)
 
-1. Ensure you have Java and Maven installed
-2. Build the project:
+> **Note:** Maven is **not required** to be installed globally. This project includes the [Maven Wrapper](https://maven.apache.org/wrapper/), so you can use `./mvnw` (Linux/macOS) or `mvnw.cmd` (Windows) to run Maven commands.
+
+### Steps
+
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/yourusername/automotive-inventory-system.git
+   cd automotive-inventory-system
    ```
-   mvn clean package
+
+2. **Build the project:**
+   ```sh
+   ./mvnw clean package      # On Linux/macOS
+   mvnw.cmd clean package    # On Windows
    ```
-3. Run the application:
+
+3. **Run the application:**
+   ```sh
+   ./mvnw javafx:run         # On Linux/macOS
+   mvnw.cmd javafx:run       # On Windows
    ```
-   mvn javafx:run
-   ```
+
+4. **Database:**
+   - The Access database file is located at `database/AutomotiveInventory.accdb`.
+   - To change the database location, update the `db.path` property in `src/main/resources/config.properties`.
+
+---
+
+## Dependencies
+
+- [UCanAccess](https://ucanaccess.sourceforge.net/) (and dependencies: Jackcess, HSQLDB, Commons Lang, Commons Logging)
+- JavaFX (managed by Maven)
+- Apache PDFBox (for PDF export)
+
+All dependencies are managed via Maven and/or included in the `lib/` directory.
+
+---
+
+## Usage
+
+- **Login** with your credentials.
+- **Navigate** using the dashboard to manage cars, employees, customers, sales, and reports.
+- **Export** sales and commission reports as TXT or PDF.
+
+---
 
 ## Troubleshooting
 
-If you encounter any issues:
+- Ensure Java is installed and in your `PATH`.
+- Use the Maven Wrapper scripts (`./mvnw` or `mvnw.cmd`) for all Maven commands.
+- Verify write access to the `database/AutomotiveInventory.accdb` file.
+- Check that all required dependencies are present in `lib/` and/or specified in `pom.xml`.
+- For database errors, confirm the correct path in `config.properties` and that the UCanAccess driver is available.
 
-1. Make sure Java and Maven are installed and in your PATH
-2. Ensure you have write access to the database file
-3. Check that the database path is correct in the config.properties file
-4. Verify that all required dependencies are correctly specified in the pom.xml file
+---
+
+## License
+
+This project is for educational and demonstration purposes.
+
+---
+
+## Credits
+
+Developed by Samiullah Qureshi.  
+Icons and images © Platinum Auto Japan.
+
