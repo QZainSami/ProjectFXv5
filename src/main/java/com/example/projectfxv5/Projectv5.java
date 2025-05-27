@@ -749,34 +749,66 @@ public class Projectv5 extends Application {
         });
 
         showAllCars.setOnAction(e -> {
-            stockArea.clear();
+            // Create a new stage for the table view
+            Stage tableStage = new Stage();
+            tableStage.setTitle("All Cars - Table View");
+
+            TableView<Car> carTable = new TableView<>();
+            carTable.setPrefHeight(700);
+            carTable.setPrefWidth(900);
+
+            // Define columns
+            TableColumn<Car, String> idCol = new TableColumn<>("ID");
+            idCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getId()));
+
+            TableColumn<Car, String> modelCol = new TableColumn<>("Model");
+            modelCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getModel()));
+
+            TableColumn<Car, String> variantCol = new TableColumn<>("Variant");
+            variantCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getVariant()));
+
+            TableColumn<Car, Double> priceCol = new TableColumn<>("Price");
+            priceCol.setCellValueFactory(data -> new javafx.beans.property.SimpleDoubleProperty(data.getValue().getPrice()).asObject());
+
+            TableColumn<Car, Double> mileageCol = new TableColumn<>("Mileage");
+            mileageCol.setCellValueFactory(data -> new javafx.beans.property.SimpleDoubleProperty(data.getValue().getMileage()).asObject());
+
+            TableColumn<Car, String> colorCol = new TableColumn<>("Color");
+            colorCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getColor()));
+
+            TableColumn<Car, String> typeCol = new TableColumn<>("Type");
+            typeCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getType()));
+
+            TableColumn<Car, Double> weightCol = new TableColumn<>("Weight");
+            weightCol.setCellValueFactory(data -> new javafx.beans.property.SimpleDoubleProperty(data.getValue().getWeight()).asObject());
+
+            TableColumn<Car, String> numberPlateCol = new TableColumn<>("Number Plate");
+            numberPlateCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getNumberPlate()));
+
+            TableColumn<Car, String> chassisCol = new TableColumn<>("Chassis No.");
+            chassisCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getChassisNumber()));
+
+            carTable.getColumns().addAll(idCol, modelCol, variantCol, priceCol, mileageCol, colorCol, typeCol, weightCol, numberPlateCol, chassisCol);
+
+            // Load data
             try {
-                // Use the DAO to get all cars
                 List<Car> cars = carDAO.getAll();
-
-                if (cars.isEmpty()) {
-                    stockArea.setText("No cars found in the database.");
-                    return;
-                }
-
-                // For tabular display, we need to handle the header differently
-                // Get the first car's toString which includes the header and separator
-                String firstCarString = cars.get(0).toString();
-                // Split by newline to separate header, separator, and data
-                String[] parts = firstCarString.split("\n");
-
-                // Append header and separator
-                stockArea.appendText(parts[0] + "\n" + parts[1] + "\n");
-
-                // Now append just the data row for each car
-                for (Car car : cars) {
-                    String[] carParts = car.toString().split("\n");
-                    stockArea.appendText(carParts[2] + "\n");
-                }
+                carTable.getItems().setAll(cars);
             } catch (Exception ex) {
                 ex.printStackTrace();
-                stockArea.setText("Error loading cars: " + ex.getMessage());
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading cars: " + ex.getMessage());
+                alert.showAndWait();
+                return;
             }
+
+            VBox vbox = new VBox(carTable);
+            vbox.setPadding(new Insets(15));
+            Scene tableScene = new Scene(vbox, 1000, 700);
+            String tableCss = getClass().getResource("/com/example/projectfxv5/css/styles.css").toExternalForm();
+            tableScene.getStylesheets().add(tableCss);
+
+            tableStage.setScene(tableScene);
+            tableStage.show();
         });
     }
 
