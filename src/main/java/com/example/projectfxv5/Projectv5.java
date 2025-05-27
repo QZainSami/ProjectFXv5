@@ -102,7 +102,7 @@ public class Projectv5 extends Application {
      */
     private void showLoginWindow(Stage primaryStage) {
         // Load CSS
-        Scene scene = new Scene(new VBox(), 450, 600);
+        Scene scene = new Scene(new VBox(), 450, 650);
         String css = getClass().getResource("/com/example/projectfxv5/css/styles.css").toExternalForm();
         scene.getStylesheets().add(css);
 
@@ -254,6 +254,85 @@ public class Projectv5 extends Application {
             if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {
                 loginButton.fire();
             }
+        });
+
+        // Register button
+        Button registerButton = new Button("Register");
+        registerButton.getStyleClass().add("action-button");
+        registerButton.setPrefWidth(250);
+
+        // Add register button to the form (below loginButton)
+        loginForm.getChildren().add(registerButton);
+
+        // Register button action
+        registerButton.setOnAction(e -> {
+            // Build registration form as a VBox
+            VBox regBox = new VBox(15);
+            regBox.setPadding(new Insets(20));
+            regBox.setAlignment(Pos.CENTER);
+            regBox.getStyleClass().add("form-container");
+
+            Label regTitle = new Label("Register New Account");
+            regTitle.getStyleClass().add("form-title");
+
+            TextField regUsername = new TextField();
+            regUsername.setPromptText("Username");
+            regUsername.setPrefWidth(220);
+
+            PasswordField regPassword = new PasswordField();
+            regPassword.setPromptText("Password");
+            regPassword.setPrefWidth(220);
+
+            Label regError = new Label();
+            regError.setTextFill(javafx.scene.paint.Color.RED);
+            regError.setVisible(false);
+
+            Button regSubmit = new Button("Register");
+            regSubmit.getStyleClass().add("success-button");
+            regSubmit.setPrefWidth(200);
+
+            Button regCancel = new Button("Cancel");
+            regCancel.getStyleClass().add("action-button");
+            regCancel.setPrefWidth(200);
+
+            regBox.getChildren().addAll(regTitle, regUsername, regPassword, regError, regSubmit, regCancel);
+
+            // Replace login form with registration form
+            mainLayout.setCenter(regBox);
+
+            regSubmit.setOnAction(ev -> {
+                String username = regUsername.getText().trim();
+                String password = regPassword.getText().trim();
+
+                if (username.isEmpty() || password.isEmpty()) {
+                    regError.setText("Username and password are required.");
+                    regError.setVisible(true);
+                    return;
+                }
+
+                try {
+                    // Check if user already exists
+                    if (userDAO.getUserByUsername(username) != null) {
+                        regError.setText("Username already exists.");
+                        regError.setVisible(true);
+                        return;
+                    }
+                    // Add user to DB
+                    userDAO.addUser(username, password);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Registration successful! You can now log in.");
+                    alert.showAndWait();
+                    // Restore login form
+                    mainLayout.setCenter(loginForm);
+                } catch (Exception ex) {
+                    regError.setText("Registration failed: " + ex.getMessage());
+                    regError.setVisible(true);
+                }
+            });
+
+            regCancel.setOnAction(ev -> {
+                // Restore login form
+                mainLayout.setCenter(loginForm);
+            });
         });
 
         // Add form to center of layout
